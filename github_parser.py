@@ -83,6 +83,25 @@ def find_AWS_keys(content):
 		print 'Error parsing %s' % content.name
 	return
 
+def find_passwords(content):
+	logger.debug("Entering find_passwords with %s" % content.name)
+	file = decode_content(content)
+	print "--------------------------------------------------------------\nChecking for passwords in: %s \n--------------------------------------------------------------" % content.name
+	if file:
+		match_password_regex = re.compile('(.*[pPaAsSwWoOrRdD]{3,}\s*[=:\']\s*\S*)')
+		match_password = match_password_regex.findall(file)
+		passwords_found = []
+		if match_password:
+			passwords_found = match_password
+			print {'Passwords':passwords_found}
+		else:
+			logger.debug("Pass: No passwords Found")
+		
+	else:
+		logger.error("There was an error parsing %s" % content.name)
+		print 'Error parsing %s' % content.name
+	return
+
 ############# Begin searching ##################
 g = Github(github_token)
 organization = None
@@ -104,5 +123,8 @@ for repo in organization.get_repos():
 			if element.type == 'blob':
 				content = repo.get_contents(element.path,ref=commit)
 				if not any([file_type in element.path for file_type in MEDIA_FILE_FORMAT]):
+					print "--------------Searching for Passwords---------------"
+					find_passwords(content)
+					print "--------------Searching for AWS Keys---------------"
 					find_AWS_keys(content)
 
