@@ -1,0 +1,27 @@
+- provider: github
+  token: XXXXXXXXXXXXXXXXXXXX
+  organization: AAAAAAAAAAAAA
+- provider: local-fs
+  folder: /path/to/search
+  analyze:
+    - check 1:
+      filter: find_pii
+      search: 
+        - dates
+        - times
+        - phones
+        - phones_with_exts
+        - links
+        - emails
+        - ips
+        - ipv6s
+        - prices
+        - hex_colors
+        - credit_cards
+        - btc_addresses
+        - street_addresses
+    - check 2:
+      filter: find_AWS_keys
+      search:
+        - strict
+     

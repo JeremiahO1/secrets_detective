@@ -14,7 +14,7 @@ README_THRESHOLD = 100
 MEDIA_FILE_FORMAT = ['.jpg','.png', '.svg', '.ttf','.woff', '.woff2', '.eot']
 
 #TODO Use Sys Args to populate ORG
-ORG = 'vocalocity'
+ORG = ''
 logger = logging.getLogger('github_parser')
 logger.setLevel(logging.DEBUG)
 log = logging.FileHandler('github_parser.log')
