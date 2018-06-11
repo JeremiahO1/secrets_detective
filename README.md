@@ -1,6 +1,6 @@
 # Github Parser
 ## Using github api to search and find anti-patterns
-To use at the commandline enter 'python2.7 github_parser.py XXXXXXXXX' where XXXXXXXXX is your github token
+To use first propogate the input.yaml file, and then at the command line enter 'python2.7 secret_detective.py'.
 
 WORK IN PROGRESS
 
@@ -10,5 +10,5 @@ This tool implements two abstractions:
 The Secret Detective is an interface that can integrate both of those abstractions
 
 ![UML Diagram]
-(https://github.com/github_parser/diagram.jpg)
+(https://github.com/stelligent/github_parser/blob/master/diagram.jpg)
 
