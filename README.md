@@ -1,8 +1,6 @@
 # Github Parser
 ## Using github api to search and find anti-patterns
-To use first propogate the input.yaml file, and then at the command line enter 'python2.7 secret_detective.py'.
-
-WORK IN PROGRESS
+To use first propogate the input.yaml file, and then at the command line enter 'python secret_detective.py'.
 
 This tool implements two abstractions:
 	- vcs wrapper to grab all information from a VCS api

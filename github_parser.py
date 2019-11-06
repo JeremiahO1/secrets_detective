@@ -27,7 +27,7 @@ if len(sys.argv) > 1:
 	github_token = sys.argv[1]
 else: 
 	logger.critical("No Github Token specified") 
-	print "Error View Logs"
+	print("Error View Logs")
 	quit()
 
 
@@ -43,17 +43,17 @@ def decode_content(content):
 def evaluate_readme(readme):
 	file = readme.content
 	file_words = file.split()
-	print "--------------------------------------------------------------\nChecking Readme for Repository: %s \n--------------------------------------------------------------" % readme.repository.name
+	print("--------------------------------------------------------------\nChecking Readme for Repository: %s \n--------------------------------------------------------------" % readme.repository.name)
 	if len(file_words) < README_THRESHOLD:
-		print "Warning: Readme is too short only %s words." % len(file_words)
+		print("Warning: Readme is too short only %s words." % len(file_words))
 	else:
-		print "Pass: Readme has exceeded the threshold"
+		print("Pass: Readme has exceeded the threshold")
 	return
 
 def find_AWS_keys(content):
 	logger.debug("Entering find_AWS_keys with %s" % content.name)
 	file = decode_content(content)
-	print "--------------------------------------------------------------\nChecking for AWS Keys in: %s \n--------------------------------------------------------------" % content.name
+	print("--------------------------------------------------------------\nChecking for AWS Keys in: %s \n--------------------------------------------------------------" % content.name)
 	if file:
 		match_key_regex = re.compile('(A[K,S][A-Z,0-9]{11,20})')
 		match_key = match_key_regex.findall(file)
@@ -74,32 +74,32 @@ def find_AWS_keys(content):
 		else:
 			logger.debug("No AWS Secret Keys Found")
 		if match_key or secrets_found:
-			print {'Keys':keys_found,'Secrets':secrets_found}
+			print({'Keys':keys_found,'Secrets':secrets_found})
 		else:
 			logger.debug("No aws keys found")
-			print 'Pass: No AWS keys found'
+			print('Pass: No AWS keys found')
 	else:
 		logger.error("There was an error parsing %s" % content.name)
-		print 'Error parsing %s' % content.name
+		print('Error parsing %s' % content.name)
 	return
 
 def find_passwords(content):
 	logger.debug("Entering find_passwords with %s" % content.name)
 	file = decode_content(content)
-	print "--------------------------------------------------------------\nChecking for passwords in: %s \n--------------------------------------------------------------" % content.name
+	print("--------------------------------------------------------------\nChecking for passwords in: %s \n--------------------------------------------------------------" % content.name)
 	if file:
 		match_password_regex = re.compile('(.*[pPaAsSwWoOrRdD]{3,}\s*[=:\']\s*\S*)')
 		match_password = match_password_regex.findall(file)
 		passwords_found = []
 		if match_password:
 			passwords_found = match_password
-			print {'Passwords':passwords_found}
+			print({'Passwords':passwords_found})
 		else:
 			logger.debug("Pass: No passwords Found")
 		
 	else:
 		logger.error("There was an error parsing %s" % content.name)
-		print 'Error parsing %s' % content.name
+		print('Error parsing %s' % content.name)
 	return
 
 ############# Begin searching ##################
@@ -108,23 +108,23 @@ organization = None
 organization = g.get_organization(ORG)
 for repo in organization.get_repos():
 	try:
-		print '#############################\n# Repository: %s #\n#############################' % repo.name
+		print('#############################\n# Repository: %s #\n#############################' % repo.name)
 		readme = repo.get_readme()
 		evaluate_readme(readme)
 	except github.GithubException as e:
 		logger.error(e)
 	branches = repo.get_branches()
 	for branch in branches:
-		print '===========================\n Branch: %s \n===========================' % branch.name
+		print('===========================\n Branch: %s \n===========================' % branch.name)
 		commit = branch.commit.sha
-		print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n Commit: %s \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' % commit
+		print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n Commit: %s \n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~' % commit)
 		tree = repo.get_git_tree(commit, recursive=True)
 		for element in tree.tree:
 			if element.type == 'blob':
 				content = repo.get_contents(element.path,ref=commit)
 				if not any([file_type in element.path for file_type in MEDIA_FILE_FORMAT]):
-					print "--------------Searching for Passwords---------------"
+					print("--------------Searching for Passwords---------------")
 					find_passwords(content)
-					print "--------------Searching for AWS Keys---------------"
+					print("--------------Searching for AWS Keys---------------")
 					find_AWS_keys(content)
 

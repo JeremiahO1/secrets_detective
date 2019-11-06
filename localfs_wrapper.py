@@ -19,7 +19,7 @@ class localfs():
 								base64_text = base64.b64encode(text)
 								self.all_content.append({'path': os.path.join(root, file_name), 'content': base64_text }) 
 			except Exception as e:
-				print e
+				print(e)
 		return
 
 #TODO Ignore image/media files to reduce bloat

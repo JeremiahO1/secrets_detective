@@ -2,7 +2,7 @@
   token: XXXXXXXXXXXXXXXXXXXX
   organization: AAAAAAAAAAAAA
 - provider: local-fs
-  folder: /path/to/search
+  folder: ./
   analyze:
     - check 1:
       filter: find_pii
